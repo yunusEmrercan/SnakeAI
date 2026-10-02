@@ -1,23 +1,25 @@
 from snake import SnakeGameAI
+from agent import Agent
 import random
 
 game = SnakeGameAI()
+agent = Agent()
+
 
 while True:
-    state = game.get_state()
-    print("State:", state)
-    action = random.choice([
-        [1, 0, 0],
-        [0, 1, 0],
-        [0, 0, 1]
-    ])
+
+    state_old = game.get_state()
+
+    action = agent.get_action(state_old)
 
     reward, done, score = game.play_step(action=action)
 
     print(f"Reward: {reward} - Done: {done} - Score: {score}")
 
     if done:
-        print("Oyun bitti :(")
+        agent.n_games +=1 
+
+        print("Oyun bitti :( Toplam Oynanan Oyun:", agent.n_games)
         print(f"Final Score: {score}")
 
         game.reset()
