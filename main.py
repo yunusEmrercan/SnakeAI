@@ -1,25 +1,22 @@
+from model import Linear_QNet
 from snake import SnakeGameAI
-from agent import Agent
-import random
+import torch
 
 game = SnakeGameAI()
-agent = Agent()
+
+model = Linear_QNet(
+    input_size=11,
+    hidden_size=256,
+    output_size=3
+)
 
 
-while True:
+state = game.get_state()
 
-    state_old = game.get_state()
+state_tensor = torch.tensor(state, dtype=torch.float)
 
-    action = agent.get_action(state_old)
+prediction = model(state_tensor)
 
-    reward, done, score = game.play_step(action=action)
+print("State", state)
+print("Q Values", prediction)
 
-    print(f"Reward: {reward} - Done: {done} - Score: {score}")
-
-    if done:
-        agent.n_games +=1 
-
-        print("Oyun bitti :( Toplam Oynanan Oyun:", agent.n_games)
-        print(f"Final Score: {score}")
-
-        game.reset()
